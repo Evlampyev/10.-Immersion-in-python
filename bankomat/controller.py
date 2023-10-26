@@ -28,7 +28,7 @@ class Controller:
                         user_card.__sub__(withdrawable_money)
                         bankomat.pick_up_from_bank(withdrawable_money)
                         MyInterface.print_text(
-                            f'Выдана сумма: {withdrawable_money}. Баланс карты: {user_card.my_money}') #Баланс карты почему-то 0
+                            f'Выдана сумма: {withdrawable_money}. Баланс карты: {user_card.my_money}')  # Баланс карты почему-то 0
 
     @staticmethod
     def checking_multiplicity(num) -> bool:
