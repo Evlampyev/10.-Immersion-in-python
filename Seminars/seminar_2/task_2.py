@@ -15,6 +15,6 @@ for i in range(len(number_systems)):
     while temp > 0:
         result = str(temp % number_systems[i]) + result
         temp //= number_systems[i]
-    print(f"Систма счисления {number_systems[i]} = {result}")
+    print(f"Система счисления {number_systems[i]} = {result}")
     result: str = ""
     temp = num
