@@ -33,12 +33,12 @@ def withdraw(amount):
     """Снятие денег."""
     if check_multiplicity(amount):
         global bank_account
-        percent = decimal.Decimal(PERCENT_REMOVAL * amount, 0)
+        percent = decimal.Decimal(PERCENT_REMOVAL * amount)
         amount_plus_percent = (amount + percent)
         if bank_account >= amount_plus_percent:
             bank_account -= amount_plus_percent
             operations.append(
-                f'Снятие с карты {amount} у.е. Процент за снятие {percent} у.е.. Итого {bank_account} у.е.')
+                f'Снятие с карты {amount} у.е. Процент за снятие {round(percent)} у.е.. Итого {round(bank_account)} у.е.')
         else:
             operations.append(
                 f'Недостаточно средств. Сумма с комиссией {amount_plus_percent} у.е. На карте {bank_account} у.е.')
@@ -54,7 +54,7 @@ def exit():
         bank_account -= rich_tax
         operations.append(
             f'Вычтен налог на богатство {RICHNESS_PERCENT}% в сумме {rich_tax} у.е. Итого {bank_account} у.е.')
-    operations.append(f'Возьмите карту на которой {bank_account} у.е.')
+    operations.append(f'Возьмите карту на которой {round(bank_account)} у.е.')
 
 
 bank_account = decimal.Decimal(0)
