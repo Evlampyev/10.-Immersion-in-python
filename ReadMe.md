@@ -4,3 +4,6 @@
 > pip freeze >  requirements.txt  - для создания файла requirements.txt \
 more requirements.txt - для просмотра файла requirements.txt \
 pip install -r requirements.txt - для установки содержимого  requirements.txt
+
+### [Модули]('Lectures/lecture_6')
+
