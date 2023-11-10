@@ -32,13 +32,12 @@ def generate_boards() -> list[list[int]]:
     count = 0
     set_queens_1 = [1, 2, 3, 4, 5, 6, 7, 8]
     set_queens_2 = [1, 2, 3, 4, 5, 6, 7, 8]
-    while successful_placements < 4:
+    while successful_placements < 92:
 
         queens = [(set_queens_1[i], set_queens_2[i]) for i in range(0, 8)]
         count += 1
         print(count)
-        # queens = [(1, 1), (2, 5), (3, 8), (4, 6), (5, 3), (6, 7), (7, 2),
-        #           (8, 4)]
+
         if check_queens(queens):
             board_list.append(queens)
             successful_placements += 1
