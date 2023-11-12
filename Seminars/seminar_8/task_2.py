@@ -17,6 +17,7 @@ FILE_NAME = 'task_2.json'
 
 
 def get_all_users() -> dict:
+    """Получение всех пользователей из файла в словарь"""
     if not Path(FILE_NAME).exists():
         return dict()
     else:
@@ -26,18 +27,25 @@ def get_all_users() -> dict:
         return json_file
 
 
-def set_all_users(new_list) -> None:
+def set_all_users(new_dict: dict) -> None:
+    """
+    Запись в файл нового словаря пользователей
+    :param new_dict: словарь пользователей
+    :return: None
+    """
     with open(FILE_NAME, 'w') as f:
-        json.dump(new_list, f, indent=4, ensure_ascii=False)
+        json.dump(new_dict, f, indent=4, ensure_ascii=False)
 
 
 def check_user_level(lvl: str) -> bool:
+    """Проверка на правильность ввода уровня пользователя"""
     if not (lvl.isdigit() and 0 < int(lvl) < 8):
         return True
 
 
 def add_new_users(all_us: dict, us_level: str, us_id: str,
                   us_name: str) -> dict:
+    """Добавление нового пользователя в словарь"""
     if us_level in all_us:
         all_us[us_level][us_id] = us_name
     else:
@@ -45,7 +53,13 @@ def add_new_users(all_us: dict, us_level: str, us_id: str,
     return all_us
 
 
-def check_user_id(all_us, id_us) -> bool:
+def check_user_id(all_us: dict, id_us: int) -> bool:
+    """
+    Проверка наличия id в исходном словаре
+    :param all_us: словарь пользователей
+    :param id_us: проверяемый id пользователя
+    :return:
+    """
     id_list = []
     for user in all_us.values():
         id_list.extend(user)
@@ -54,7 +68,7 @@ def check_user_id(all_us, id_us) -> bool:
     return id_us in id_list
 
 
-def input_data():
+def main():
     all_users = get_all_users()
     print(all_users)
     while True:
@@ -77,4 +91,4 @@ def input_data():
 
 
 if __name__ == '__main__':
-    input_data()
+    main()

@@ -1,34 +1,105 @@
-import os
+# Напишите функцию, которая сохраняет созданный в
+# прошлом задании файл в формате CSV.
+
 from pathlib import Path
-import pickle
+import json
+import csv
+from typing import List, Any
 
-BASE_DIR = Path(__file__).resolve().parent
-
-
-def convert_json_to_pickle(directory: str, filename: str):
-    pickle_filename = filename.rsplit('.', 1)[0] + '.pickle'
-
-    with open(os.path.join(BASE_DIR, directory, filename), 'rb') as f:
-        file_data = f.read()
-
-    with open(os.path.join(BASE_DIR, directory, pickle_filename), 'wb') as f:
-        pickle.dump(file_data, f)
+FILE_NAME = 'task_2.json'
 
 
-def search_json_files(directory: str) -> list[str]:
-    json_files = []
-    for filename in os.listdir(os.path.join(BASE_DIR, directory)):
-        if os.path.isfile(os.path.join(BASE_DIR, directory, filename)) \
-                and filename.endswith('.json'):
-            json_files.append(filename)
-
-    return json_files
-
-
-def convert_all_json_files(directory: str):
-    json_files = search_json_files(directory)
-    for filename in json_files:
-        convert_json_to_pickle(directory, filename)
+def get_all_users() -> dict:
+    """Получение всех пользователей из файла в словарь"""
+    if not Path(FILE_NAME).exists():
+        return dict()
+    else:
+        with open(FILE_NAME, 'r', encoding='utf-8') as f:
+            json_file = json.load(f)
+            # загрузка JSON из файла и сохранение в dict
+        return json_file
 
 
-convert_all_json_files('examples')
+def set_all_users_csv(new_dict: dict) -> None:
+    """
+    Запись в файл-csv нового словаря пользователей
+    :param new_dict: словарь пользователей
+    :return: None
+    """
+    with open('task_3.csv', 'w', newline='', encoding='utf-8') as f_write:
+        csv_write = csv.DictWriter(f_write, fieldnames=["level", "id", "name"],
+                                   dialect='excel-tab', quoting=csv.QUOTE_ALL)
+
+        csv_write.writeheader()
+        for lvl, dict_row in new_dict.items():
+            for id_us, name in dict_row.items():
+                user = {'level': lvl, 'id': id_us, 'name': name}
+                csv_write.writerow(user)
+
+
+def set_all_users_json(new_dict: dict) -> None:
+    """
+    Запись в файл-csv нового словаря пользователей
+    :param new_dict: словарь пользователей
+    :return: None
+    """
+    with open(FILE_NAME, 'w') as f:
+        json.dump(new_dict, f, indent=4, ensure_ascii=False)
+
+
+def check_user_level(lvl: str) -> bool:
+    """Проверка на правильность ввода уровня пользователя"""
+    if not (lvl.isdigit() and 0 < int(lvl) < 8):
+        return True
+
+
+def add_new_users(all_us: dict, us_level: str, us_id: str,
+                  us_name: str) -> dict:
+    """Добавление нового пользователя в словарь"""
+    if us_level in all_us:
+        all_us[us_level][us_id] = us_name
+    else:
+        all_us[us_level] = {us_id: us_name}
+    return all_us
+
+
+def check_user_id(all_us: dict, id_us: int) -> bool:
+    """
+    Проверка наличия id в исходном словаре
+    :param all_us: словарь пользователей
+    :param id_us: проверяемый id пользователя
+    :return:
+    """
+    id_list = []
+    for user in all_us.values():
+        id_list.extend(user)
+    # принимает в качестве параметра итерируемый объект
+    # и объединяет его со списком.
+    return id_us in id_list
+
+
+def main():
+    all_users = get_all_users()
+    print(all_users)
+    while True:
+
+        user_name = input('Введите имя или Enter для выхода: ')
+        if not user_name:
+            break
+
+        user_id = input("Введите id: ")
+        while check_user_id(all_users, user_id):
+            user_id = input(f'ID {user_id} уже занят, выберите другой ID: ')
+
+        user_level = input('Введите уровень доступа пользователя: ')
+        while check_user_level(user_level):
+            user_level = input('Ошибка уровня доступа, '
+                               ' введите число от 1 до 7: ')
+
+        all_users = add_new_users(all_users, user_level, user_id, user_name)
+        set_all_users_json(all_users)
+        set_all_users_csv(all_users)
+
+
+if __name__ == '__main__':
+    main()
