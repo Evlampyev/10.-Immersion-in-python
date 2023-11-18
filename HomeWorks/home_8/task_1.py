@@ -11,8 +11,40 @@
 import json
 import csv
 import pickle
-from pathlib import Path
 import os
+
+
+def get_dir_size(start_path='.'):
+    total_size = 0
+    for dirpath, dirnames, filenames in os.walk(start_path):
+        for f in filenames:
+            fp = os.path.join(dirpath, f)
+            total_size += os.path.getsize(fp)
+        for d in dirnames:
+            dp = os.path.join(dirpath, d)
+            total_size += get_dir_size(dp)
+    return total_size
+
+
+def save_results_to_json(results, file_name):
+    """Сохранение списка словарей в JSON"""
+    with open(file_name, 'w') as f:
+        json.dump(results, f)
+
+
+def save_results_to_csv(results, file_name):
+    """Сохранение списка словарей в CSV """
+    with open(file_name, 'w', newline='') as f:
+        writer = csv.writer(f)
+        writer.writerow(['Path', 'Type', 'Size'])
+        for result in results:
+            writer.writerow([result['Path'], result['Type'], result['Size']])
+
+
+def save_results_to_picle(results, file_name):
+    """Сохранение списка словарей в PICLE"""
+    with open(file_name, 'wb') as f:
+        pickle.dump(results, f)
 
 
 def traverse_directory(directory: str) -> list[dict]:
@@ -21,30 +53,22 @@ def traverse_directory(directory: str) -> list[dict]:
     :param directory:  рабочий директорий
     :return: список словарей
     """
-    my_list = []
-    for dir_path, dir_name, file_name in os.walk(os.getcwd()):
-        # dict = {'path': dir_path, 'type': }
-        print(f'{dir_path = }\n{dir_name = }\n{file_name = }\n')
-
-
-def save_results_to_json(all_files: list[dict]):
-    """Сохранение списка словарей в JSON"""
-    pass
-
-
-def save_results_to_csv(all_files: list[dict]):
-    """Сохранение списка словарей в CSV """
-    pass
-
-
-def save_results_to_picle(all_files: list[dict]):
-    """Сохранение списка словарей в PICLE"""
-    pass
+    results = []
+    for root, dirs, files in os.walk(directory):
+        for name in files:
+            path = os.path.join(root, name)
+            size = os.path.getsize(path)
+            results.append({'Path': path, 'Type': 'File', 'Size': size})
+        for name in dirs:
+            path = os.path.join(root, name)
+            size = get_dir_size(path)
+            results.append({'Path': path, 'Type': 'Directory', 'Size': size})
+    return results
 
 
 def main():
-    my_dir = '/home_8'
-    traverse_directory(my_dir)
+    my_dir = '/HomeWorks/home_8'
+    print(traverse_directory(my_dir))
 
 
 if __name__ == '__main__':
