@@ -9,7 +9,7 @@ from random import randint
 from typing import Callable
 
 
-def decorator_function(func) -> Callable:
+def decorator_save_to_json(func) -> Callable:
     def wrapper(*args, **kwargs):
         func_name = func.__name__
         file_name = func_name + '.json'
@@ -27,23 +27,18 @@ def decorator_function(func) -> Callable:
         for key, value in kwargs.items():
             data[result][key] = value
         with open(file_name, 'w', encoding='UTF-8') as f:
-            json.dump(data, f)
+            json.dump(data, f, ensure_ascii=False)
 
         return result
 
     return wrapper
 
 
-@decorator_function
+@decorator_save_to_json
 def function(*args, **kwargs) -> int:
     """Возведение числа в степень"""
     number, number_pow = args[0], args[1]
     return pow(number, number_pow)
-
-
-@decorator_function
-def ather_func():
-    pass
 
 
 if __name__ == '__main__':
