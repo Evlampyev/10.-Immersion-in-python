@@ -3,12 +3,15 @@ class Person:
 
     def __init__(self):
         """Конструктор экземпляров класса"""
-        self.level = 1
+        self.level = 1  # self - указатель на экземпляр класса
         self.health = 100
         print(f'{id(self)}')
 
 
 p1 = Person()
+print(f'{p1.max_up = }')
+print(f'{Person.max_up = }')
+
 p2 = Person()
 
 print(f'{p1.max_up = }, {p1.level = }, {p1.health = }')
