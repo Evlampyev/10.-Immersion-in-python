@@ -8,7 +8,7 @@ __Десериализация__ — восстановление объекто
 
 #### Преобразование JSON в Python
 
-> import json
+> import json \
 > json_file = json.load(f)
 >> загрузка JSON из [файла](task_1.py) и сохранение в dict или list \
 
@@ -17,7 +17,7 @@ __Десериализация__ — восстановление объекто
 
 #### Преобразование Python в JSON
 
-> import json
+> import json \
 > json.dump(my_dict, f)
 >> сохранение dict или list в [файле](task_3.py) в виде JSON \
 
@@ -25,9 +25,9 @@ __Десериализация__ — восстановление объекто
 >> сохранение dict или list в виде JSON [строки](task_4.py)
   
 
-> res = json.dumps(my_dict, indent=2,
-                    separators=(',', ':'),
-                    sort_keys=True)
+> res = json.dumps(my_dict, indent=2, \
+                    separators=(',', ':'), \
+                    sort_keys=True) \
 * Параметр indent отвечает за форматирование с отступами
 * Параметр separators принимает на вход кортеж из двух строковых элементов.
 Первый — символ разделитель элементов.
