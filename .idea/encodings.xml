@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/Lectures/lecture_12_OOP_3_end/sqlite.db" charset="windows-1251" />
     <file url="file://$PROJECT_DIR$/Lectures/lecture_8/PICKLE/my_dict.pickle" charset="windows-1251" />
     <file url="file://$PROJECT_DIR$/Seminars/seminar_8/task_2.json" charset="windows-1251" />
   </component>
