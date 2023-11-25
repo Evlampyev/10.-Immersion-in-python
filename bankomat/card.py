@@ -6,22 +6,29 @@ class Card:
     """Карта пользователя"""
 
     def __init__(self, money: Money = Money(0, '₽')):
-        self.my_money = money
+        self._my_money = money
         self.count_step = 0
 
-    def get_money(self) -> Money:
+    @property
+    def my_money(self) -> Money:
         """геттер"""
-        return self.my_money
+        return self._my_money
 
-    def set_money(self, money) -> None:
+    @my_money.setter
+    def my_money(self, money) -> None:
         """сеттер"""
-        self.my_money = money
+        self._my_money = money
+        self.count_step += 1
 
-    def chech_money_on_card(self, money) -> bool:
-        return self.my_money >= money
+    def check_money_on_card(self, money) -> bool:
+        return self._my_money >= money
 
-    def __add__(self, other):
-        self.my_money += other
+    def check_count_operation(self) -> int:
+        interest = 0
+        if (self.count_step + 1) % 3 == 0:
+            interest = self.my_money * 0.03
+            self._my_money += interest
+        return interest
 
-    def __sub__(self, other):
-        self.my_money -= other
+    def __str__(self):
+        return f'Баланс карты: {self.my_money}'

@@ -1,7 +1,6 @@
 from controller import Controller
 
 
-
 def main():
     new = Controller()
 

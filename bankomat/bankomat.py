@@ -24,8 +24,11 @@ class Bankomat:
 
     def put_in_bank(self, money):
         """Пополнить баланс карты"""
-        pass
+        self.bank_money += money
 
     def quit(self):
         """Выход"""
         pass
+
+    def __str__(self):
+        return f"В банкомате {self.bank_money} наличных денег"
