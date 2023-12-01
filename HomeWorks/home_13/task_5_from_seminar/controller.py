@@ -2,7 +2,7 @@ from terminal_interface import TerminalInterface
 from company import Company
 from user import User
 from pathlib import Path
-from my_error import ValueInRangeError
+from my_error import ValueInRangeError, LevelException, VerificationError
 
 
 class Controller:
@@ -14,11 +14,13 @@ class Controller:
         lst_company = self.company_in_place()
         self.interface.print_data(f'Зарегистрированные компании: {lst_company}')
         company_name = self.interface.input_data('Введите название компании: ')
-        self.company = Company(company_name)
+        access_level = int(self.interface.input_data('Уровень доступа для сотрудников компании: '))
+        self.company = Company(company_name, access_level)
 
         self.choose_menu()
 
-    def company_in_place(self):
+    @staticmethod
+    def company_in_place():
         pathlist = Path().cwd().glob('*.json')
         company_list = []
         for el in pathlist:
@@ -46,10 +48,19 @@ class Controller:
             menu_res = input()
 
     def authorization(self):
-        print('aut')
+        self.interface.print_data('-- Авторизация --')
+        lst_authorization = ["Введите имя пользователя: ", "Введите ID пользователя: "]
+        name = self.interface.input_data(lst_authorization[0])
+        u_id = self.interface.input_data(lst_authorization[1])
+        auth_user = User(name, u_id, 1)
+        try:
+            user_level = self.company.user_verification(auth_user)
+            self.interface.print_data(f'Авторизация успешна, ваш уровень доступа {user_level}')
+        except VerificationError as ver_er:
+            self.interface.print_data(ver_er)
 
     def registration(self):
-        print('reg')
+        self.interface.print_data('-- Регистрация --')
         lst_registration = ["Введите имя пользователя: ",
                             "Введите ID пользователя: ",
                             "Введите уровень доступа пользователя: "]
@@ -58,12 +69,16 @@ class Controller:
         while self.company.check_id_in_company(u_id):
             u_id = self.interface.input_data('Пользователь с таким ID существует, введите новый: ')
         level_access = int(self.interface.input_data(lst_registration[2]))
-
+        error = True
+        while error:
+            try:
+                error = False
+                user = User(name, u_id, level_access)
+            except ValueInRangeError as er:
+                error = True
+                self.interface.print_data(er)
+                level_access = int(self.interface.input_data('Повторите ввод уровня доступа: '))
         try:
-            user = User(name, u_id, level_access)
-        except ValueInRangeError(1, 7) as error:
-            self.interface.print_data(error)
-            level_access = int(self.interface.input_data('Повторите ввод уровня доступа: '))
-        finally:
-            user = User(name, u_id, level_access)
-        self.company.add_user(user)
+            self.company.add_user(user)
+        except LevelException as lev_er:
+            self.interface.print_data(lev_er)

@@ -1,14 +1,16 @@
 from user import User
 import json
 from pathlib import Path
+from my_error import LevelException, VerificationError
 
 
 class Company:
     # directory = Path.cwd() / 'HomeWorks' / 'home_13' / 'task_5_from_seminar'
 
-    def __init__(self, name_company: str):
+    def __init__(self, name_company: str, access_level: int):
         self.name_company = name_company
         self.file_name = f'{name_company}' + '.json'
+        self.access_level = access_level
 
     @property
     def users_dict(self) -> dict:
@@ -43,14 +45,28 @@ class Company:
             lst_id.append(user.u_id)
         return u_id in lst_id
 
+    def user_verification(self, user):
+        users_list = self.from_dict_to_list()
+        user_access_level = None
+        for el in users_list:
+            if el == user:
+                user_access_level = el.level_access
+        if user_access_level is None:
+            raise VerificationError(user.name)
+        else:
+            return user_access_level
+
     def add_user(self, user):
         """Добавление нового сотрудника в компанию"""
-        users_dict = self.users_dict
-        if str(user.level_access) in users_dict:
-            users_dict[str(user.level_access)][user.u_id] = user.name
+        if user.level_access < self.access_level:
+            raise LevelException(self.access_level)
         else:
-            users_dict[user.level_access] = {user.u_id: user.name}
-        self.users_dict = users_dict
+            users_dict = self.users_dict
+            if str(user.level_access) in users_dict:
+                users_dict[str(user.level_access)][user.u_id] = user.name
+            else:
+                users_dict[user.level_access] = {user.u_id: user.name}
+            self.users_dict = users_dict
 
     def __str__(self):
         """Вывод списка пользователей компании"""

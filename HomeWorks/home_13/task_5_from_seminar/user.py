@@ -9,7 +9,7 @@ class NumberCheck:
     def validate_value(self, value: float | int) -> None:
         if not isinstance(value, int | float):
             raise ValueError
-        if not 1 <= value <= 7:
+        if not self.min <= value <= self.max:
             raise ValueInRangeError(self.min, self.max)
 
     def __set_name__(self, owner, name):

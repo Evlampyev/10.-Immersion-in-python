@@ -67,7 +67,7 @@ class UsersCompany:
     def set_all_users(self) -> None:
         """Запись в файл нового словаря пользователей"""
         with open(self.file_name, 'w') as f:
-            json.dump(self.all_users_dict, f, indent=4, ensure_ascii=False)
+            json.dump(self.users_dict, f, indent=4, ensure_ascii=False)
 
     def add_new_users(self, user: User):
         """Добавление нового пользователя в словарь"""
