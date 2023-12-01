@@ -2,11 +2,19 @@
 <module type="PYTHON_MODULE" version="4">
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
-      <sourceFolder url="file://$MODULE_DIR$/HomeWorks/home_13/task_5_from_seminar/tests" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/bankomat/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/HomeWorks/home_13/tests_user_comp" isTestSource="true" />
+      <excludeFolder url="file://$MODULE_DIR$/.pytest_cache/v" />
+      <excludeFolder url="file://$MODULE_DIR$/HomeWorks/home_13/.pytest_cache/v" />
+      <excludeFolder url="file://$MODULE_DIR$/HomeWorks/home_13/tests_user_comp/.pytest_cache/v" />
+      <excludeFolder url="file://$MODULE_DIR$/HomeWorks/home_13/users_componies/.pytest_cache/v" />
+      <excludeFolder url="file://$MODULE_DIR$/Lectures/lecture_14_tests/pytest/.pytest_cache/v" />
+      <excludeFolder url="file://$MODULE_DIR$/Lectures/lecture_14_tests/unittest/.pytest_cache/v" />
+      <excludeFolder url="file://$MODULE_DIR$/Seminars/seminar_14/.pytest_cache/v" />
+      <excludeFolder url="file://$MODULE_DIR$/bankomat/tests/.pytest_cache/v" />
       <excludeFolder url="file://$MODULE_DIR$/venv" />
     </content>
-    <orderEntry type="jdk" jdkName="Python 3.11" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Python 3.11 (venv)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
   <component name="PackageRequirementsSettings">
