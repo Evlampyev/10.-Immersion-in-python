@@ -2,6 +2,7 @@ from user import User
 import json
 from pathlib import Path
 from my_error import LevelException, VerificationError
+from typing import Any
 
 
 class Company:
@@ -10,7 +11,12 @@ class Company:
     def __init__(self, name_company: str, access_level: int):
         self.name_company = name_company
         self.file_name = f'{name_company}' + '.json'
-        self.access_level = access_level
+        if access_level > 0:
+            self.access_level = access_level
+            self.users_dict = {0: {name_company: access_level}}
+        else:
+            company = self.users_dict['0']
+            self.access_level = company[name_company]
 
     @property
     def users_dict(self) -> dict:
@@ -28,13 +34,14 @@ class Company:
         with open(self.file_name, 'w') as file:
             json.dump(my_dict, file, indent=4, ensure_ascii=False)
 
-    def from_dict_to_list(self):
+    def from_dict_to_list(self) -> list[User]:
         """Преобразование из словаря в список User"""
         my_dict = self.users_dict
         my_list = []
         for level, name_u_id_dict in my_dict.items():
             for u_id, name in name_u_id_dict.items():
-                my_list.append(User(name, u_id, int(level)))
+                if level != '0':
+                    my_list.append(User(name, u_id, int(level)))
         return my_list
 
     def check_id_in_company(self, u_id: str) -> bool:
@@ -45,7 +52,7 @@ class Company:
             lst_id.append(user.u_id)
         return u_id in lst_id
 
-    def user_verification(self, user):
+    def user_verification(self, user) -> Any:
         users_list = self.from_dict_to_list()
         user_access_level = None
         for el in users_list:
@@ -56,7 +63,7 @@ class Company:
         else:
             return user_access_level
 
-    def add_user(self, user):
+    def add_user(self, user: User):
         """Добавление нового сотрудника в компанию"""
         if user.level_access < self.access_level:
             raise LevelException(self.access_level)

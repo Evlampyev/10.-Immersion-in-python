@@ -14,8 +14,12 @@ class Controller:
         lst_company = self.company_in_place()
         self.interface.print_data(f'Зарегистрированные компании: {lst_company}')
         company_name = self.interface.input_data('Введите название компании: ')
-        access_level = int(self.interface.input_data('Уровень доступа для сотрудников компании: '))
-        self.company = Company(company_name, access_level)
+        if company_name in lst_company:
+            self.company = Company(company_name, 0)
+            self.interface.print_data(f'Уровень доступа вашей организации: {self.company.access_level}.')
+        else:
+            access_level = int(self.interface.input_data('Уровень доступа для сотрудников компании: '))
+            self.company = Company(company_name, access_level)
 
         self.choose_menu()
 
@@ -31,19 +35,28 @@ class Controller:
         lst = ['Ваши действия:',
                '1. Авторизация',
                "2. Регистрация",
-               "3. Выход"]
+               "3. Посмотреть список сотрудников",
+               "4. Сменить компанию",
+               "0. Выход"]
         for el in lst:
             self.interface.print_data(el)
 
     def choose_menu(self):
         self.menu_print()
         menu_res = input()
-        while menu_res != '3':
+        while menu_res != '0':
             match menu_res:
                 case '1':
                     self.authorization()
                 case '2':
                     self.registration()
+                case '3':
+                    self.interface.print_data(f'{self.company}')
+                case '4':
+                    new_controller = Controller()
+                case _:
+                    self.interface.print_data('Нет такого пункта меню')
+
             self.menu_print()
             menu_res = input()
 
@@ -56,8 +69,8 @@ class Controller:
         try:
             user_level = self.company.user_verification(auth_user)
             self.interface.print_data(f'Авторизация успешна, ваш уровень доступа {user_level}')
-        except VerificationError as ver_er:
-            self.interface.print_data(ver_er)
+        except VerificationError as error:
+            self.interface.print_data(error)
 
     def registration(self):
         self.interface.print_data('-- Регистрация --')
@@ -74,9 +87,9 @@ class Controller:
             try:
                 error = False
                 user = User(name, u_id, level_access)
-            except ValueInRangeError as er:
+            except ValueInRangeError as value_error:
                 error = True
-                self.interface.print_data(er)
+                self.interface.print_data(value_error)
                 level_access = int(self.interface.input_data('Повторите ввод уровня доступа: '))
         try:
             self.company.add_user(user)
