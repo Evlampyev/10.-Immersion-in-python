@@ -54,7 +54,7 @@ class Money:
 
     def __mul__(self, other):
         if isinstance(other, int | float):
-            return Money(self.money * other, self.currency)
+            return Money(round(self.money * other), self.currency)
         else:
             raise TypeError("Не верный тип данных")
 
@@ -68,7 +68,7 @@ class Money:
 
     def __imul__(self, other: float | int):
         if isinstance(other, float | int):
-            self.money *= other
+            self.money = round(self.money * other)
             return self
         else:
             raise TypeError("Не верный тип данных")
