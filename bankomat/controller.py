@@ -1,19 +1,24 @@
 from card import Card
 from money import Money
-from bankomat import Bankomat
+from unit_bankomat import Bankomat
 from terminal import Terminal as MyInterface
+from logging import basicConfig, getLogger, INFO
 
 
 class Controller:
     """Работа всей системы"""
 
-    CURRENCY = '$'
+    CURRENCY = '₽'
     PERCENT = 0.015
     MULTIPLE = 50
+    FORMAT = '[{levelname:<8}] {asctime}: {funcName} -> {msg}'
 
     def __init__(self, money=1_000):
         user_card = Card(Money(money, self.CURRENCY))
         bankomat = Bankomat(self.CURRENCY)
+        basicConfig(filename=f'log/{__name__}.log', filemode='w', level=INFO,
+                    encoding='utf-8', format=self.FORMAT, style='{')
+        LOGGER = getLogger(__name__)
         MyInterface.print_text("Здравствуйте")
 
         while (choice := self.request_to_perform_operations()) != 4:
@@ -23,13 +28,14 @@ class Controller:
                     money = self.get_right_amount()
                     interest = Money(0, self.CURRENCY)
                     if money > Money(0, self.CURRENCY):
-                        interest = Money(user_card.check_count_operation(), self.CURRENCY)
+                        interest = user_card.check_count_operation()
 
                         user_card.my_money += money
                         bankomat.put_in_bank(money)
-                    MyInterface.print_text(
-                        f'|Баланс пополнен на сумму: {money}. {user_card}.\n'
-                        f'|Проценты по вкладу: {interest} {bankomat}')
+                        text = (f'|Баланс пополнен на сумму: {money}. {user_card}.\n'
+                                f'|Проценты по вкладу: {interest} {bankomat}')
+                    MyInterface.print_text(text)
+                    LOGGER.info(text)
 
                 case 2:  # Снятие наличных с карты
                     interest = Money(0, self.CURRENCY)
@@ -43,19 +49,24 @@ class Controller:
                     if bankomat.check_pick_up_from_bank(withdrawable_money - commission):
                         if user_card.check_money_on_card(withdrawable_money):
                             user_card.my_money -= withdrawable_money
-                            interest = Money(user_card.check_count_operation(),
-                                             self.CURRENCY)
+                            interest = user_card.check_count_operation()
                             bankomat.pick_up_from_bank(withdrawable_money - commission)
-                            MyInterface.print_text(
-                                f'|Выдана сумма: {withdrawable_money - commission}. '
-                                f'{user_card}.\n'
+                            text = (
+                                f'|Выдана сумма: {withdrawable_money - commission}. {user_card}.\n'
                                 f'|Проценты по вкладу: {interest} {bankomat}')
+                            MyInterface.print_text(text)
+                            LOGGER.info(text)
                         else:
-                            MyInterface.print_text('На карте недостаточно средств')
+                            text = 'На карте недостаточно средств'
+                            MyInterface.print_text(text)
+                            LOGGER.info(text)
                     else:
-                        MyInterface.print_text('В банкомате недостаточно наличности')
+                        text = 'В банкомате недостаточно наличности'
+                        MyInterface.print_text(text)
+                        LOGGER.info(text)
                 case 3:  # Получение баланса карты
                     MyInterface.print_text(user_card)
+                    LOGGER.info(user_card)
                 case 4:
                     pass
             # выход
@@ -85,7 +96,7 @@ class Controller:
 
     def commission_calculation(self, money: Money) -> Money:
         """Расчет процентов за снятие денег"""
-        commission = self.PERCENT * money.money
+        commission = round(self.PERCENT * money.money, 0)
         if 0 < commission < 30:
             commission = 30
         elif commission > 600:
