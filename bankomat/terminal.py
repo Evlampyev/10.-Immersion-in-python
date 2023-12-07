@@ -8,6 +8,15 @@ class Terminal(Interface):
         print(data)
 
     @staticmethod
-    def input_data():
-        money: int = int(input())
-        return money
+    def input_data(**kwargs):
+        data: int = 0
+        try:
+            data: int = int(input())
+        except ValueError:
+            print('Не верный ввод, должно быть число')
+            Terminal.input_data()
+        return data
+
+    @staticmethod
+    def parser_input(self):
+        return input()

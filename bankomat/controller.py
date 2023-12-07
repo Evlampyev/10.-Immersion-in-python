@@ -3,6 +3,7 @@ from money import Money
 from unit_bankomat import Bankomat
 from terminal import Terminal as MyInterface
 from logging import basicConfig, getLogger, INFO
+from argparse import ArgumentParser
 
 
 class Controller:
@@ -67,9 +68,8 @@ class Controller:
                 case 3:  # Получение баланса карты
                     MyInterface.print_text(user_card)
                     LOGGER.info(user_card)
-                case 4:
+                case 4:  # выход
                     pass
-            # выход
 
     @staticmethod
     def request_to_perform_operations() -> int:
